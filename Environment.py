@@ -15,7 +15,7 @@ class Environment:
         self.total_words = get_words()
         self.quordle = Quordle(answer)
         self.num_guesses = 0
-        self.state = np.zeros(1691)
+        self.state = np.zeros(1695)
         self.state[0] = self.quordle.nguesses
         self.guess_to_state()
         self.action_space = np.array(range(len(self.total_words)))
@@ -26,7 +26,7 @@ class Environment:
         self.rewards = [0]
         self.quordle.reset(answer)
         self.num_guesses = 0
-        self.state = np.zeros(1691)
+        self.state = np.zeros(1695)
         self.state[0] = self.quordle.nguesses
         self.guess_to_state()
         self.action_space = np.array(range(len(self.total_words)))
@@ -81,6 +81,8 @@ class Environment:
                             self.state[131 + 390*k + 26*3*i + 3*j] = 1
                         self.state[131 + 390*k + 26*3*i + 3*val + 2] = 1
                         self.state[131 + 390*k + 26*3*i + 3*val] = 0
+        for j in range(1,5):
+            self.state[-j] = self.quordle.done[-j]
 
         
     def step(self, action):

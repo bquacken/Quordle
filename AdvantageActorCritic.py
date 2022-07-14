@@ -15,7 +15,8 @@ class AdvantageActorCritic(keras.Model):
     Output: Logits with shape as the length of the number of actions
     
     mx: (n, 130) Sparse Matrix of one-hot encoded words that are the possible actions. 
-    actions_list: list of indices for where corresponding actions can be found in the total_words list, used for training on smaller 100/1000 word games
+    actions_list: list of indices for where corresponding actions can be found in the total_words list,
+    used for training on smaller 100/1000 word games
     """
     def __init__(self, mx, actions_list):
         super().__init__()
@@ -23,10 +24,11 @@ class AdvantageActorCritic(keras.Model):
         self.actions_list = actions_list
         self.n_outputs = 130
         self.relu = layers.ReLU()
-        self.dense1 = layers.Dense(1024, activation= self.relu)
-        self.dense2 = layers.Dense(1024, activation= self.relu)
-        self.dense3 = layers.Dense(1024, activation= self.relu)
-        self.policy1 = layers.Dense(self.n_outputs)
+        self.dense1 = layers.Dense(512, activation= self.relu)
+        self.dense2 = layers.Dense(512, activation= self.relu)
+        self.dense3 = layers.Dense(512, activation= self.relu)
+        self.policy1 = layers.Dense(512, activation = self.relu)
+        self.policy2 = layers.Dense(self.n_outputs)
         self.value1 = layers.Dense(256, activation = self.relu)
         self.value = layers.Dense(1)
         
@@ -36,6 +38,7 @@ class AdvantageActorCritic(keras.Model):
         x = self.dense2(x)
         x = self.dense3(x)
         policy = self.policy1(x)
+        policy = self.policy2(policy)
         policy = tf.linalg.matmul(self.mx, policy, transpose_b=True)
         policy_logits = tf.linalg.matrix_transpose(policy)
         value = self.value1(x)
